@@ -2,9 +2,22 @@ import { Request, Response } from "express";
 import Task from "../models/task.model";
 
 export const index = async (req: Request, res: Response) => {
-  const tasks = await Task.find({
-    deleted: false
-  });
+
+  interface Find {
+    deleted: Boolean,
+    status?: String
+  }
+
+  const find: Find = {
+    deleted: false,
+  };
+
+  if(req.query.status) {
+    // find["status"] = req.query.status;
+    find.status = req.query.status.toString();
+  }
+
+  const tasks = await Task.find(find);
 
   res.json(tasks);
 }
