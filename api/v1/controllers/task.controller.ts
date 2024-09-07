@@ -3,21 +3,39 @@ import Task from "../models/task.model";
 
 export const index = async (req: Request, res: Response) => {
 
-  interface Find {
-    deleted: Boolean,
-    status?: String
-  }
 
-  const find: Find = {
+  //Find
+  // interface Find {
+  //   deleted: boolean,
+  //   status?: string
+  // }
+
+  // const find: Find = {
+  //   deleted: false,
+  // };
+
+  const find = {
     deleted: false,
   };
 
   if(req.query.status) {
-    // find["status"] = req.query.status;
-    find.status = req.query.status.toString();
+    // find.status = req.query.status.toString();
+    find["status"] = req.query.status;
   }
 
-  const tasks = await Task.find(find);
+  //End Find
+
+  //Sort
+  const sort = {};
+
+  if(req.query.sortKey && req.query.sortValue) {
+    const sortKey = req.query.sortKey.toLocaleString();
+    sort[sortKey] = req.query.sortValue;
+  }
+  
+  //End Sort
+
+  const tasks = await Task.find(find).sort(sort);
 
   res.json(tasks);
 }
