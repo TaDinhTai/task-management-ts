@@ -121,6 +121,21 @@ export const changeMulti = async (req: Request, res: Response) => {
         });
         break;
 
+      case "delete":
+        await Task.updateMany(
+          { _id: { $in: ids }},
+          {
+            deleted: true,
+            deletedAt: new Date()
+          }
+        );
+
+        res.json({
+          code: 200, 
+          message: "Xóa thành công!"
+        });
+        break;
+
       default:
         res.json({
           code: 400,
@@ -191,7 +206,7 @@ export const deleteTask = async (req: Request, res: Response) => {
     })
   } catch (error) {
     res.json({
-      code: 400, 
+      code: 400,  
       message: "Lỗi!"
     })
   }
